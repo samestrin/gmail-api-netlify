@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "public"
+
+[[redirects]]
+  from = "/api/gmail"
+  to = "/.netlify/functions/sendEmail"
+  status = 200

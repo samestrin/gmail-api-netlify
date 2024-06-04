@@ -1,0 +1,31 @@
+{
+  "name": "gmail-api-netlify",
+  "version": "0.0.1",
+  "description": "This application is a Netlify function-based REST API that sends emails using Gmail's SMTP server. It accepts header and POST arguments to configure and send emails securely.",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samestrin/gmail-api-netlify.git"
+  },
+  "keywords": [
+    "gmail",
+    "mail",
+    "email",
+    "netlify",
+    "netlify",
+    "functions",
+    "lambda"
+  ],
+  "author": "Sam Estrin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samestrin/gmail-api-netlify/issues"
+  },
+  "homepage": "https://github.com/samestrin/gmail-api-netlify#readme",
+  "dependencies": {
+    "nodemailer": "^6.9.13"
+  }
+}
