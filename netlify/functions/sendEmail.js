@@ -12,7 +12,16 @@ exports.handler = async (event) => {
   const body = JSON.parse(event.body);
 
   const { username, password } = headers;
-  const { to, cc, bcc, from, subject, body: emailBody, attachment } = body;
+  const {
+    to,
+    cc,
+    bcc,
+    from,
+    subject,
+    body: emailBody,
+    attachment,
+    port,
+  } = body;
 
   if (!username || !password || !to || !subject || !emailBody) {
     return {
@@ -22,11 +31,12 @@ exports.handler = async (event) => {
   }
 
   let fromAddress = from || username;
+  let smtpPort = port === 465 ? 465 : 587;
 
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: smtpPort,
+    secure: smtpPort === 465,
     auth: {
       user: username,
       pass: password,

@@ -1,0 +1,82 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  background-color: #071a21;
+}
+.navbar .nav-link {
+  color: #fff;
+  margin-left: 1rem;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Encode the white hamburger icon as an SVG data URI */
+}
+
+.card-header {
+  background-color: #071a21;
+  color: #fff;
+}
+
+.card-header .logo {
+  margin-bottom: 0px; /* Adjust this value to change the spacing */
+  padding-bottom: 0px;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.logo img {
+  max-width: 100%; /* Ensures the image does not exceed its actual width */
+  width: 100%; /* Makes the width adjust to the container size */
+  height: auto; /* Maintains aspect ratio */
+}
+
+.card-header .title {
+  font-weight: 900;
+}
+
+pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+code.markdown {
+  color: #212529;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+}
+
+div.accordion div.card-header .btn-link {
+  color: #fff !important;
+}
+
+/* Add this to your assets/css/styles.css file */
+.accordion .card-header .btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+}
+
+.accordion .card-header .btn:after {
+  content: "\f077"; /* Font Awesome up arrow */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  transition: transform 0.2s;
+}
+
+.accordion .card-header .btn.collapsed:after {
+  transform: rotate(180deg);
+}
+
+.btn-link {
+  text-decoration: none !important;
+}
+
+.btn-link:hover {
+  text-decoration: none !important;
+}
