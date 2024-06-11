@@ -31,6 +31,8 @@ const formatPhoneNumber = (phoneNumber) => {
 };
 
 exports.handler = async (event) => {
+  const startTime = process.hrtime();
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -63,7 +65,7 @@ exports.handler = async (event) => {
   }
 
   const { username, password } = headers;
-  const { phone, carrier, subject, body: textBody, port } = body.fields;
+  const { phone, carrier, subject, body: textBody, port, from } = body.fields;
 
   const requiredFields = {
     username,
@@ -159,9 +161,17 @@ exports.handler = async (event) => {
     };
 
     let info = await transporter.sendMail(mailOptions);
+
+    const endTime = process.hrtime(startTime);
+    const runTime = (endTime[0] * 1e9 + endTime[1]) / 1e6; // Convert to milliseconds
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Text sent", info: info }),
+      body: JSON.stringify({
+        message: "Email sent",
+        info: info,
+        runtime: `${runTime.toFixed(2)}ms`,
+      }),
     };
   } catch (error) {
     return {
