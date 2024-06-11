@@ -14,6 +14,22 @@ const client = new Redis({
 const windowOfTimeSeconds = 60;
 const maxTriesInWindow = 5;
 
+const CARRIER_GATEWAYS = {
+  verizon: "vtext.com",
+  att: "txt.att.net",
+  tmobile: "tmomail.net",
+  sprint: "messaging.sprintpcs.com",
+};
+
+const isValidUSPhoneNumber = (phoneNumber) => {
+  const phoneRegex = /^[2-9]\d{2}[2-9]\d{2}\d{4}$/;
+  return phoneRegex.test(phoneNumber);
+};
+
+const formatPhoneNumber = (phoneNumber) => {
+  return phoneNumber.startsWith("1") ? phoneNumber.slice(1) : phoneNumber;
+};
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
@@ -47,18 +63,16 @@ exports.handler = async (event) => {
   }
 
   const { username, password } = headers;
-  const {
-    to,
-    cc,
-    bcc,
-    from,
-    subject,
-    body: emailBody,
-    attachment,
-    port,
-  } = body.fields;
+  const { phone, carrier, subject, body: textBody, port } = body.fields;
 
-  const requiredFields = { username, password, to, subject, body };
+  const requiredFields = {
+    username,
+    password,
+    phone,
+    carrier,
+    subject,
+    body: textBody,
+  };
   const missingFields = [];
 
   for (const [field, value] of Object.entries(requiredFields)) {
@@ -73,6 +87,25 @@ exports.handler = async (event) => {
       body: `Missing required field(s): ${missingFields.join(", ")}`,
     };
   }
+
+  if (!isValidUSPhoneNumber(formatPhoneNumber(phone))) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify("Invalid phone number"),
+    };
+  }
+
+  if (!CARRIER_GATEWAYS[carrier.toLowerCase()]) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify("Unsupported carrier"),
+    };
+  }
+
+  const formattedPhoneNumber = formatPhoneNumber(phone);
+  const recipientEmail = `${formattedPhoneNumber}@${
+    CARRIER_GATEWAYS[carrier.toLowerCase()]
+  }`;
 
   const ip = event.headers["x-forwarded-for"] || event.headers["client-ip"];
   const currentTime = Math.floor(Date.now() / 1000);
@@ -106,7 +139,7 @@ exports.handler = async (event) => {
     let smtpPort = port === 465 ? 465 : 587;
 
     // Append the footer to the email body
-    const modifiedEmailBody = `${emailBody}\r\n\r\n[ sent by: https://restmail.ing/ ]`;
+    const modifiedEmailBody = `${textBody}\n[sent:https://restmail.ing/]`;
 
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -120,24 +153,21 @@ exports.handler = async (event) => {
 
     let mailOptions = {
       from: fromAddress,
-      to: to,
-      cc: cc,
-      bcc: bcc,
+      to: recipientEmail,
       subject: subject,
       text: modifiedEmailBody,
-      attachments: attachment ? [attachment] : [],
     };
 
     let info = await transporter.sendMail(mailOptions);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Email sent", info: info }),
+      body: JSON.stringify({ message: "Text sent", info: info }),
     };
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "Error sending email",
+        message: "Error sending text",
         error: error.toString(),
       }),
     };

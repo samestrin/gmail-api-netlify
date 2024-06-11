@@ -3,6 +3,11 @@
   publish = "public"
 
 [[redirects]]
-  from = "/api/gmail"
+  from = "/api/mail"
   to = "/.netlify/functions/sendEmail"
+  status = 200
+
+[[redirects]]
+  from = "/api/text"
+  to = "/.netlify/functions/sendText"
   status = 200

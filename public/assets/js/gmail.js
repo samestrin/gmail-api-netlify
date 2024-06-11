@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+
   $("#emailForm").on("submit", function (event) {
     event.preventDefault();
 
@@ -29,17 +31,11 @@ $(document).ready(function () {
       contentType: false,
       data: formData,
       success: function (response) {
-        $("#response").html(
-          `<div class="alert alert-success">Email sent successfully!</div>`
-        );
         $("#errorModalLabel").text("Success");
         $("#errorMessage").text("Email sent successfully!");
         $("#errorModal").modal("show");
       },
       error: function (error) {
-        $("#response").html(
-          `<div class="alert alert-danger">Error sending email: ${error.responseText}</div>`
-        );
         $("#errorModalLabel").text("Error");
         $("#errorMessage").text(`Error sending email: ${error.responseText}`);
         $("#errorModal").modal("show");

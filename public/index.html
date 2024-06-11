@@ -80,8 +80,8 @@
               >
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-scroll" href="#attribution">Attribution</a>
-              </li>
+              <a class="nav-link nav-scroll" href="#attribution">Attribution</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link nav-scroll" href="#selfHost">Self Host</a>
             </li>
@@ -89,10 +89,11 @@
         </div>
       </div>
     </nav>
-    <div id="sendEmail"></div>
+
     <div class="container my-5 pt-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
+          <!-- Introduction Card -->
           <div class="card">
             <div
               class="card-header d-flex justify-content-center align-items-center flex-column"
@@ -107,13 +108,49 @@
                 </a>
               </div>
               <div class="title">
-                <h4>Simple RESTful Send Email API</h4>
+                <h1>Simple RESTful Send Email API</h1>
               </div>
+            </div>
+            <div class="card-body">
+              <h5>Why does this API exist?</h5>
+              <p>
+                This API was created to simplify sending low volumes of email
+                when dealing with port blocking issues.
+              </p>
+              <p>
+                The following providers block outbound SMTP traffic on ports 465
+                and 587 to prevent spam and abuse.
+              </p>
+              <ul>
+                <li>Google Cloud Platform (GCP)</li>
+                <li>Amazon Web Services (AWS)</li>
+                <li>Microsoft Azure</li>
+                <li>DigitalOcean</li>
+                <li>Linode</li>
+                <li>Vultr</li>
+              </ul>
+              <p>
+                While this API is 100% free to use with
+                <a class="nav-scroll" href="#attribution">attribution</a>, high
+                volumes of API requests will be throttled.
+              </p>
+            </div>
+          </div>
+          <!-- Send Email Card -->
+          <div id="sendEmail"></div>
+          <div class="card mt-4">
+            <div class="card-header">
+              <h5 class="mb-0">Send Email</h5>
             </div>
             <div class="card-body">
               <form id="emailForm" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label for="username">Gmail Username</label>
+                  <label
+                    for="username"
+                    data-toggle="tooltip"
+                    title="Enter your email address. This is the address used to login."
+                    >Email Address</label
+                  >
                   <input
                     type="email"
                     class="form-control"
@@ -122,7 +159,12 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="password">Gmail App Password</label>
+                  <label
+                    for="password"
+                    data-toggle="tooltip"
+                    title="Enter your email password. If you are using Gmail, you will need to generate and use a 16 character App Password."
+                    >Email Password</label
+                  >
                   <input
                     type="password"
                     class="form-control"
@@ -131,22 +173,54 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="to">To</label>
-                  <input type="email" class="form-control" id="to" required />
-                </div>
-                <div class="form-group">
-                  <label for="cc">CC</label>
-                  <input type="email" class="form-control" id="cc" />
-                </div>
-                <div class="form-group">
-                  <label for="bcc">BCC</label>
-                  <input type="email" class="form-control" id="bcc" />
-                </div>
-                <div class="form-group">
-                  <label for="from">From</label>
+                  <label
+                    for="from"
+                    data-toggle="tooltip"
+                    title="Enter your from email address. Some servers will automatically default to the email address provided above."
+                    >From</label
+                  >
                   <input type="email" class="form-control" id="from" />
                 </div>
                 <div class="form-group">
+                  <label for="to">To</label>
+                  <input type="email" class="form-control" id="to" required />
+                </div>
+                <div class="accordion" id="extendedOptionsAccordion">
+                  <div class="card">
+                    <div class="card-header" id="headingExtendedOptions">
+                      <h5 class="mb-0">
+                        <button
+                          class="btn btn-link collapsed"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseExtendedOptions"
+                          aria-expanded="false"
+                          aria-controls="collapseExtendedOptions"
+                        >
+                          Extended Delivery Options
+                        </button>
+                      </h5>
+                    </div>
+                    <div
+                      id="collapseExtendedOptions"
+                      class="collapse"
+                      aria-labelledby="headingExtendedOptions"
+                      data-parent="#extendedOptionsAccordion"
+                    >
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="cc">CC</label>
+                          <input type="email" class="form-control" id="cc" />
+                        </div>
+                        <div class="form-group">
+                          <label for="bcc">BCC</label>
+                          <input type="email" class="form-control" id="bcc" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mt-2">
                   <label for="subject">Subject</label>
                   <input
                     type="text"
@@ -233,11 +307,11 @@
                 <div class="form-group mt-2">
                   <label for="port">Port</label>
                   <select class="form-control" id="port">
-                    <option value="587">
-                      587 - Used for explicit TLS (STARTTLS).
-                    </option>
                     <option value="465">
                       465 - Used for implicit TLS (SSL)
+                    </option>
+                    <option value="587">
+                      587 - Used for explicit TLS (STARTTLS).
                     </option>
                   </select>
                 </div>
@@ -245,7 +319,6 @@
                   Send Email
                 </button>
               </form>
-              <div class="mt-3" id="response"></div>
             </div>
           </div>
         </div>
@@ -344,12 +417,14 @@ curl_close($ch);
             </div>
             <div class="card-body">
               <p>
-                Our Simple RESTful Send Email API is offered free of charge for personal and commercial use.</p>
-              <p>However, we kindly request that you provide attribution by including the following link on any website or application that uses our API:
-              <pre style="height:110px"><code class="language-html">
-&lt;a href="https://restmail.ing/" target="_blank">Powered by RESTMail.ing&lt;/a>
-</code>
+                Our Simple RESTful Send Email API is offered free of charge for
+                personal and commercial use. However, we kindly request that you
+                provide attribution by including the following link on any
+                website or application that uses our API:
               </p>
+              <pre style="height: 110px"><code class="language-html">
+&lt;a href="https://restmail.ing/" target="_blank">Powered by RESTMail.ing&lt;/a>
+</code></pre>
             </div>
           </div>
         </div>
@@ -364,14 +439,15 @@ curl_close($ch);
             <div class="card-body">
               <p>
                 If you'd like to host your own Simple RESTful Send Email API
-                service, you can follow the instructions provided in the GitHub
-                repository.
+                service, you can follow the instructions provided in the
+                <a href="https://github.com/samestrin/send-email-api-netlify"
+                  >GitHub repository</a
+                >.
               </p>
             </div>
           </div>
         </div>
       </div>
-
     </div>
     <footer class="text-center mt-5 pb-5">
       <p>
